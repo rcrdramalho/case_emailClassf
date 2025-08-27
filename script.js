@@ -44,22 +44,22 @@ document.getElementById("uploadForm").addEventListener("submit", async function(
 
 async function enviarParaLambda(bodyData) {
     try {
+        // Proxy temporário para contornar CORS
+        const proxyUrl = "https://cors-anywhere.herokuapp.com/";
         const lambdaUrl = "https://kcp02bv6wa.execute-api.sa-east-1.amazonaws.com/cases";
+        const fullUrl = proxyUrl + lambdaUrl;
 
-        // Log da URL e body para debug
-        console.log("URL da requisição:", lambdaUrl);
+        console.log("URL da requisição:", fullUrl);
         console.log("Body enviado:", JSON.stringify(bodyData));
 
-        const response = await fetch(lambdaUrl, {
+        const response = await fetch(fullUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(bodyData)
         });
 
-        // Recebe a resposta completa da Lambda
         const resData = await response.json();
 
-        // Tenta parsear o body da Lambda, se for string pura exibe direto
         let lambdaBody;
         try {
             lambdaBody = JSON.parse(resData.body);
