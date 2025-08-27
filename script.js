@@ -11,26 +11,32 @@ document.getElementById("uploadForm").addEventListener("submit", async function(
 
         reader.onload = async function() {
             let base64String;
+
             if (file.type === "application/pdf" || file.type === "text/plain") {
                 const bytes = new Uint8Array(reader.result);
                 base64String = btoa(String.fromCharCode(...bytes));
+
                 bodyData = {
                     body: base64String,
                     isBase64Encoded: true
                 };
-                enviarParaLambda(bodyData);
+
+                await enviarParaLambda(bodyData);
             } else {
                 document.getElementById("resposta").textContent = "Tipo de arquivo não suportado.";
             }
         };
 
         reader.readAsArrayBuffer(file);
+
     } else if (textInput.length > 0) {
         bodyData = {
             body: textInput,
             isBase64Encoded: false
         };
-        enviarParaLambda(bodyData);
+
+        await enviarParaLambda(bodyData);
+
     } else {
         document.getElementById("resposta").textContent = "Por favor, insira texto ou selecione um arquivo.";
     }
@@ -38,23 +44,31 @@ document.getElementById("uploadForm").addEventListener("submit", async function(
 
 async function enviarParaLambda(bodyData) {
     try {
-        // Proxy CORS temporário
-        const proxyUrl = "https://cors-anywhere.herokuapp.com/";
         const lambdaUrl = "https://kcp02bv6wa.execute-api.sa-east-1.amazonaws.com/cases";
-        const fullUrl = proxyUrl + lambdaUrl;
 
-        // Log da URL e do body
-        console.log("URL da requisição:", fullUrl);
+        // Log da URL e body para debug
+        console.log("URL da requisição:", lambdaUrl);
         console.log("Body enviado:", JSON.stringify(bodyData));
 
-        const response = await fetch(fullUrl, {
+        const response = await fetch(lambdaUrl, {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(bodyData)
         });
 
-        const data = await response.json();
-        document.getElementById("resposta").textContent = JSON.stringify(data, null, 2);
+        // Recebe a resposta completa da Lambda
+        const resData = await response.json();
+
+        // Tenta parsear o body da Lambda, se for string pura exibe direto
+        let lambdaBody;
+        try {
+            lambdaBody = JSON.parse(resData.body);
+        } catch {
+            lambdaBody = resData.body;
+        }
+
+        document.getElementById("resposta").textContent = JSON.stringify(lambdaBody, null, 2);
+
     } catch (err) {
         document.getElementById("resposta").textContent = "Erro: " + err;
         console.error(err);
