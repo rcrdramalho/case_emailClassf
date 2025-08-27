@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Envio de arquivo ou texto</title>
+</head>
+<body>
+<h1>Enviar arquivo (.txt / .pdf) ou inserir texto</h1>
+
+<form id="uploadForm">
+    <fieldset>
+        <legend>Arquivo</legend>
+        <label for="file">Escolha um arquivo (.txt ou .pdf):</label><br>
+        <input type="file" id="file" accept=".txt,application/pdf">
+        <p>Ou deixe em branco para enviar apenas o texto abaixo.</p>
+    </fieldset>
+
+    <fieldset>
+        <legend>Texto simples</legend>
+        <label for="text">Cole ou escreva o texto aqui:</label><br>
+        <textarea id="text" rows="10" cols="60" placeholder="Seu texto..."></textarea>
+    </fieldset>
+
+    <p>
+        <button type="submit">Enviar</button>
+        <button type="reset">Limpar</button>
+    </p>
+</form>
+
+<h2>Resposta da API:</h2>
+<pre id="resposta"></pre>
+
+<!-- Referência ao script externo -->
+<script src="script.js"></script>
+</body>
+</html>
