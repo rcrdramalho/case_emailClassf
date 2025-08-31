@@ -114,7 +114,7 @@ function handleDrop(e) {
     }
 }
 
-// Funções de manipulação de arquivo
+// Funções de manipulação d arquivo
 function handleFileChange(e) {
     const file = e.target.files[0];
     if (!file) {
