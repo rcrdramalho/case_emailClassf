@@ -13,7 +13,6 @@ except ImportError:
     # PyPDF2 deve estar empacotada junto com a Lambda
     pass
 
-# Configure sua API Key do Gemini
 GEMINI_API_KEY = "AIzaSyDevgwVk4Y9Bj3BMJTBiLeuoBBIZRrWFuo"
 
 # URLs dos modelos (com fallback)
@@ -535,7 +534,7 @@ def parse_detailed_response(response_text, include_response=False):
 
 def health_check():
     """
-    Função para verificar saúde da API (pode ser chamada separadamente).
+    Função para verificar saúde da API.
     """
     try:
         test_prompt = "Classifique: 'Email teste'. Responda apenas 'Produtivo' ou 'Não produtivo'."
