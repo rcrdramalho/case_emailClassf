@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classificador de Emails com IA - AutoU</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📧</text></svg>">
 </head>
 <body>
 <!-- Loading Overlay -->
 <div id="loadingOverlay" class="loading-overlay" style="display: none;">
     <div class="loading-spinner">
         <div class="spinner"></div>
-        <p>Classificando email com IA...</p>
+        <p>Classificando email...</p>
     </div>
 </div>
 
@@ -21,8 +20,8 @@
 
 <div class="container">
     <header class="header">
-        <h1>🤖 Classificador de Emails com IA</h1>
-        <p class="subtitle">Tecnologia Gemini AI para classificação automática de emails</p>
+        <h1>🤖 Classificador binário de Emails</h1>
+        <p class="subtitle">Classificação automática de emails atráves do Google Gemini</p>
     </header>
 
     <form id="uploadForm">
@@ -32,17 +31,25 @@
             <div class="config-grid">
                 <div class="config-item">
                     <label for="confidence">Nível de Confiança:</label>
+                    <p class="config-helper-text">Ajusta o nível de prevenção à fraudes</p>
                     <select id="confidence">
-                        <option value="0">Padrão (Rápido)</option>
-                        <option value="0.3">Conservador</option>
-                        <option value="0.7">Muito Conservador</option>
+                        <option value="0.7">Padrão (balanceado)</option>
+                        <option value="0.3">Conservador (maior acurácia)</option>
+                        <option value="0">Muito Conservador (maior prevenção)</option>
                     </select>
                 </div>
-                <div class="config-item">
-                    <label for="detailed">Resposta Detalhada:</label>
-                    <input type="checkbox" id="detailed">
-                    <span class="checkbox-label">Incluir justificativa da classificação</span>
+
+                <div class="config-item detailed-response-option">
+                    <div class="label-group">
+                        <label for="detailed">Resposta Detalhada</label>
+                        <p class="config-helper-text">Inclui a justificativa da IA na resposta.</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="detailed">
+                        <span class="slider"></span>
+                    </label>
                 </div>
+
             </div>
         </fieldset>
 
@@ -53,7 +60,7 @@
                 <div class="file-upload-content">
                     <input type="file" id="file" accept=".txt,application/pdf" hidden>
                     <div class="upload-icon">📁</div>
-                    <p class="upload-text">Clique para selecionar ou arraste um arquivo aqui</p>
+                    <p class="upload-text">Clique para selecionar ou arraste um arquivo</p>
                     <p class="upload-subtext">Formatos aceitos: .txt, .pdf (máx. 10MB)</p>
                 </div>
             </div>

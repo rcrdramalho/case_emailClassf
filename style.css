@@ -1010,3 +1010,85 @@ select:focus-visible {
         display: none !important;
     }
 }
+
+/* Estilos para o novo Toggle Switch de Resposta Detalhada */
+
+/* Alinha o texto à esquerda e o interruptor à direita */
+.config-item.detailed-response-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detailed-response-option .label-group {
+    padding-right: 15px;
+}
+
+.detailed-response-option .label-group label {
+    font-weight: 500;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.detailed-response-option .config-helper-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* O container do interruptor */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+    flex-shrink: 0; /* Impede que o interruptor encolha */
+}
+
+/* Esconde o checkbox padrão */
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* O "trilho" do interruptor */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 28px;
+    transition: background-color 0.4s;
+}
+
+/* O "botão" circular que desliza */
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.4s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estilos para o estado "ligado" (quando o checkbox está marcado) */
+input:checked + .slider {
+    background-color: var(--primary-color); /* Usa sua cor primária */
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--primary-color);
+}
+
+/* Animação de deslizar do botão */
+input:checked + .slider::before {
+    transform: translateX(24px);
+}
