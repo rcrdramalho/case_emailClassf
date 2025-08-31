@@ -1,0 +1,29 @@
+Email Classifier com AWS Lambda e OpenAI
+
+Este projeto utiliza AWS Lambda e a API do GEMINI para classificar e-mails recebidos (em texto, .txt ou .pdf) em categorias como Produtivo ou Não Produtivo.
+
+Funcionamento:
+
+-Upload de e-mails em texto corrido, .txt ou .pdf
+-Envio para uma função AWS Lambda via API Gateway
+-Uso da API do OpenAI para análise de conteúdo
+-Retorno da classificação do e-mail em formato JSON
+
+Funcionalidades:
+
+-Ajuste de nível de confiança no conteúdo
+-Justificativa da classificação
+-Copiar/Exportar o retorno
+-Análise do retorno técnico completo
+-Histórico de classificações
+
+Como rodar localmente:
+
+-Clone o repositório
+-Abra um servidor local na pasta do repositório (recomendo isto para que não haja problema com o CORS na AWS)
+-Acesse esse servidor
+-Teste o envio de arquivos do seu sistema operacional para o sistema
+
+Deploy disponível em: https://emailclassifier.netlify.app/?
+
+Desenvolvido por Ricardo Ramalho
