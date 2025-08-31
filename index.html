@@ -2,43 +2,165 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-    <title>Classificador de Emails - IA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classificador de Emails com IA - AutoU</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📧</text></svg>">
 </head>
 <body>
-<div class="container">
-    <h1>📧 Classificador de Emails com IA</h1>
-
-    <form id="uploadForm">
-        <fieldset>
-            <legend>📎 Arquivo</legend>
-            <label for="file">Escolha um arquivo (.txt ou .pdf):</label>
-            <div class="file-input-container">
-                <input type="file" id="file" accept=".txt,application/pdf">
-                <button type="button" id="removeFile" class="remove-file-btn" style="display: none;">❌ Remover arquivo</button>
-            </div>
-            <p id="fileInfo">Ou deixe em branco para enviar apenas o texto abaixo.</p>
-        </fieldset>
-
-        <fieldset>
-            <legend>✏️ Texto simples</legend>
-            <label for="text">Cole ou escreva o texto do email aqui:</label>
-            <textarea id="text" rows="10" cols="60" placeholder="Cole aqui o conteúdo do email que deseja classificar...&#10;&#10;Exemplo:&#10;Prezado suporte,&#10;Estou com dificuldades para acessar minha conta..."></textarea>
-        </fieldset>
-
-        <div class="button-container">
-            <button type="submit">🚀 Classificar Email</button>
-            <button type="reset">🗑️ Limpar</button>
-        </div>
-    </form>
-
-    <div class="response-section">
-        <h2>📊 Resultado da Classificação:</h2>
-        <pre id="resposta">Aguardando envio...</pre>
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Classificando email com IA...</p>
     </div>
 </div>
 
-<!-- Referência ao script externo -->
+<!-- Toast Notifications -->
+<div id="toastContainer" class="toast-container"></div>
+
+<div class="container">
+    <header class="header">
+        <h1>🤖 Classificador de Emails com IA</h1>
+        <p class="subtitle">Tecnologia Gemini AI para classificação automática de emails</p>
+    </header>
+
+    <form id="uploadForm">
+        <!-- Configurações de Classificação -->
+        <fieldset>
+            <legend>⚙️ Configurações de Classificação</legend>
+            <div class="config-grid">
+                <div class="config-item">
+                    <label for="confidence">Nível de Confiança:</label>
+                    <select id="confidence">
+                        <option value="0">Padrão (Rápido)</option>
+                        <option value="0.3">Conservador</option>
+                        <option value="0.7">Muito Conservador</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label for="detailed">Resposta Detalhada:</label>
+                    <input type="checkbox" id="detailed">
+                    <span class="checkbox-label">Incluir justificativa da classificação</span>
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Upload de Arquivo -->
+        <fieldset>
+            <legend>📎 Arquivo</legend>
+            <div class="file-upload-area" id="fileUploadArea">
+                <div class="file-upload-content">
+                    <input type="file" id="file" accept=".txt,application/pdf" hidden>
+                    <div class="upload-icon">📁</div>
+                    <p class="upload-text">Clique para selecionar ou arraste um arquivo aqui</p>
+                    <p class="upload-subtext">Formatos aceitos: .txt, .pdf (máx. 10MB)</p>
+                </div>
+            </div>
+            <div class="file-info" id="fileInfo" style="display: none;">
+                <div class="file-details">
+                    <span id="fileName"></span>
+                    <span id="fileSize"></span>
+                    <button type="button" id="removeFile" class="remove-file-btn">❌ Remover</button>
+                </div>
+                <div class="file-preview" id="filePreview"></div>
+            </div>
+        </fieldset>
+
+        <!-- Texto Manual -->
+        <fieldset>
+            <legend>✏️ Texto do Email</legend>
+            <div class="text-input-container">
+                <label for="text">Cole ou escreva o conteúdo do email:</label>
+                <div class="textarea-wrapper">
+                        <textarea
+                                id="text"
+                                rows="12"
+                                placeholder="Cole aqui o conteúdo completo do email que deseja classificar...&#10;&#10;Exemplo:&#10;Assunto: Solicitação de Suporte&#10;De: cliente@empresa.com&#10;&#10;Prezado suporte,&#10;Estou enfrentando dificuldades para acessar minha conta..."></textarea>
+                    <div class="char-counter">
+                        <span id="charCount">0</span> caracteres
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Botões de Ação -->
+        <div class="button-container">
+            <button type="submit" class="btn-primary">
+                <span class="btn-icon">🚀</span>
+                <span class="btn-text">Classificar Email</span>
+            </button>
+            <button type="reset" class="btn-secondary">
+                <span class="btn-icon">🗑️</span>
+                <span class="btn-text">Limpar Tudo</span>
+            </button>
+            <button type="button" id="exampleBtn" class="btn-tertiary">
+                <span class="btn-icon">💡</span>
+                <span class="btn-text">Carregar Exemplo</span>
+            </button>
+        </div>
+    </form>
+
+    <!-- Seção de Resultados -->
+    <div class="response-section">
+        <div class="response-header">
+            <h2>📊 Resultado da Classificação</h2>
+            <div class="response-actions" style="display: none;">
+                <button id="copyResult" class="btn-copy">📋 Copiar</button>
+                <button id="exportResult" class="btn-export">💾 Exportar</button>
+            </div>
+        </div>
+
+        <div class="result-container">
+            <div id="classificationResult" class="classification-result" style="display: none;">
+                <div class="classification-badge">
+                    <span id="classificationLabel"></span>
+                </div>
+                <div class="classification-details">
+                    <p id="classificationExplanation"></p>
+                    <div class="confidence-meter">
+                        <label>Nível de Confiança:</label>
+                        <div class="confidence-bar">
+                            <div id="confidenceLevel" class="confidence-fill"></div>
+                        </div>
+                        <span id="confidenceText">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="raw-response">
+                <details>
+                    <summary>🔧 Resposta Técnica Completa</summary>
+                    <pre id="resposta">Aguardando classificação...</pre>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- Histórico de Classificações -->
+    <div class="history-section">
+        <div class="history-header">
+            <h3>📈 Histórico de Classificações</h3>
+            <button id="clearHistory" class="btn-clear-history">🗑️ Limpar Histórico</button>
+        </div>
+        <div id="historyContainer" class="history-container">
+            <p class="empty-history">Nenhuma classificação realizada ainda.</p>
+        </div>
+    </div>
+
+    <!-- Footer com Informações -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>🤖 Powered by <strong>Google Gemini AI</strong></p>
+            <p>📊 Classificação automática: <span class="highlight">Produtivo</span> vs <span class="highlight">Não Produtivo</span></p>
+            <div class="stats">
+                <span>📧 Emails processados: <span id="totalProcessed">0</span></span>
+                <span>✅ Taxa de sucesso: <span id="successRate">-</span></span>
+            </div>
+        </div>
+    </footer>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>
