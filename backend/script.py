@@ -13,7 +13,7 @@ except ImportError:
     # PyPDF2 deve estar empacotada junto com a Lambda
     pass
 
-GEMINI_API_KEY = "AIzaSyDevgwVk4Y9Bj3BMJTBiLeuoBBIZRrWFuo"
+GEMINI_API_KEY = "AIzaSyDevgBj3BMJTBiLeuoBBIZRrWFuo"
 
 # URLs dos modelos (com fallback)
 GEMINI_MODELS = [
